@@ -1,6 +1,15 @@
 # Password Strength Calculator
 
-[TODO. There will be project description]
+Estimates your passoword, gives it a score from 0 to 10
+
+## How to use:
+
+**Launch:**
+```bash
+$ python password_strength.py
+$ Password: <type_your_password>
+$ 8
+```
 
 # Project Goals
 
