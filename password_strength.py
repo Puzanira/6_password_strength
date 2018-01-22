@@ -8,27 +8,42 @@ black_list = ['qwerty',
               '00000',
               '98765']
 
-def get_password_strength(password):
-    scores = 0
-    length_scores = len(password) / 2.0
-    if length_scores > 10:
-        scores += 10
-    else:
-        scores += length_scores
+def check_symbols(password):
+    score = 0
     if re.search(r'[0-9]', password):
-        scores += 2
+        score += 2
     if re.search(r'[a-z]', password):
-        scores += 2
+        score += 2
     if re.search(r'[A-Z]', password):
-        scores += 2
+        score += 2
     if re.search(r'[!@#$%&*()~{}]', password):
-        scores += 4
+        score += 4
+    return score
+
+
+def check_blacklist(password):
+    score = 0
     for word in black_list:
         if password.find(word) != -1:
-            scores -= 5
-    if scores < 0:
-        scores = 0
-    return int(scores / 2.0)
+            score -= 5
+    return score
+
+
+def check_length(password):
+    length_scores = len(password) / 2.0
+    if length_scores > 10:
+        length_scores = 10
+    return length_scores
+
+
+def get_password_strength(password):
+    total_scores = 0
+    total_scores += check_blacklist(password)
+    total_scores += check_length(password)
+    total_scores += check_symbols(password)
+    if total_scores < 0:
+        total_scores = 0
+    return int(total_scores / 2.0)
 
 
 if __name__ == '__main__':
