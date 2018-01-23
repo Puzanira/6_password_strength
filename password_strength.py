@@ -1,32 +1,27 @@
 import re
+import getpass
+import json
 
 
-black_list = ['qwerty',
-              'asdfg',
-              '12345',
-              'password',
-              '00000',
-              '98765']
+def load_from_json(filepath):
+    with open(filepath, 'r') as file_handler:
+        return json.load(file_handler)
+
 
 def check_symbols(password):
-    score = 0
-    if re.search(r'[0-9]', password):
-        score += 2
-    if re.search(r'[a-z]', password):
-        score += 2
-    if re.search(r'[A-Z]', password):
-        score += 2
-    if re.search(r'[!@#$%&*()~{}]', password):
-        score += 4
+    score = sum([int(bool(re.search(r'[0-9]', password)) * 2),
+                 int(bool(re.search(r'[a-z]', password)) * 2),
+                 int(bool(re.search(r'[A-Z]', password)) * 2),
+                 int(bool(re.search(r'[!@#$%&*()~{}]', password)) * 4)])
     return score
 
 
 def check_blacklist(password):
-    score = 0
+    black_list = load_from_json('blacklist.json')
     for word in black_list:
-        if password.find(word) != -1:
-            score -= 5
-    return score
+        if password == word:
+            return -10
+    return 0
 
 
 def check_length(password):
@@ -47,5 +42,5 @@ def get_password_strength(password):
 
 
 if __name__ == '__main__':
-    password = input('Пароль: ')
+    password = getpass.getpass('Пароль: ')
     print(get_password_strength(password))
